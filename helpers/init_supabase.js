@@ -31,3 +31,6 @@ process.on('SIGINT', async () => {
     console.log('Disconnecting from Supabase...');
     process.exit(0);
 });
+
+
+module.exports = supabase;

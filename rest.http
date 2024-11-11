@@ -2,6 +2,12 @@ GET http://localhost:3000
 
 ###Login route
 POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "felixnjuguna123@mail.bloom",
+    "password":"1234567"
+} 
 
 
 ###Register route
@@ -9,8 +15,8 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "email": "hellofelix123@gmail.com",
-    "password":"1234"
+    "email": "fellliz123@mail.bloom",
+    "password":"1234567"
 } 
 
 ###Refresh-token route

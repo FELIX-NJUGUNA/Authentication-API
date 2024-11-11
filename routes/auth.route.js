@@ -1,110 +1,107 @@
 const express = require('express');
 const createError = require('http-errors');
-const supabase = require('../helpers/init_supabase'); // Import the Supabase client
-
+const supabase = require('../helpers/init_supabase'); // Import supabase client
 const router = express.Router();
 
-// Registration Route: Create a new user
+// Registration Route
 router.post('/register', async (req, res, next) => {
   try {
-    // Extracting the email and password from the request body
     const { email, password } = req.body;
 
-    // Validate if email and password are provided
     if (!email || !password) {
-      throw createError.BadRequest('Email and password are required');
+      return next(createError.BadRequest('Email and password are required'));
     }
 
-    // Check if the user already exists in Supabase
-    const { data, error } = await supabase
-      .from('users')  // Assuming 'users' is the table for your user data
+    // Check if user already exists in the 'users' table
+    const { data: existingUser, error: fetchError } = await supabase
+      .from('users')
       .select('*')
-      .eq('email', email)  // Check if email already exists
-      .single(); // Get only one result
+      .eq('email', email);
 
-    if (error && error.code !== 'PGRST116') {  // Ignore error if no data is found
-      throw new Error(error.message);
+    if (fetchError) {
+      console.error("Error checking existing user:", fetchError);
+      return next(createError.InternalServerError(fetchError.message));
     }
 
-    if (data) {
-      // If a user with this email already exists, return a conflict error
+    if (existingUser && existingUser.length > 0) {
       return next(createError.Conflict(`${email} is already registered`));
     }
 
-    
-    // Create the new user in the 'users' table (without hashing password for now)
-    const { data: newUser, error: insertError } = await supabase.
-      from('users')
-      .insert([
-      { email, password }  // Save password as is for now (not hashed)
-      ])
-       .single();
-    
+    // Insert the new user (plain text password for now)
+    const { data, error: insertError } = await supabase
+      .from('users')
+      .insert([{ email, password }]);
 
+    // Check for insert errors
     if (insertError) {
-      throw new Error(insertError.message);
+      console.error("Error inserting user:", insertError);  // Log the insert error
+      return next(createError.InternalServerError(insertError.message));
     }
 
-    // Return the created user (exclude sensitive data like password)
-    res.status(201).json({
-      message: 'User registered successfully',
-      user: { email: newUser.email, id: newUser.id },
-    });
+    // Ensure the insert operation returns valid data (even if it might be empty)
+    if (!data || data.length === 0) {
+      console.error("User creation failed, no data returned:", data);
+      return next(createError.InternalServerError('Failed to create user.'));
+    }
 
+    // Successfully created user, respond with the user data
+    res.status(201).send({ message: 'User created successfully', user: data[0] });
   } catch (error) {
-    next(error);  // Pass the error to the global error handler
+    console.error("Unexpected error:", error);  // Log any unexpected errors
+    next(error); // Pass the error to the global error handler
   }
 });
 
-// Login Route: User login
+
+// Login Route: User login without JWT (using users table only)
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validate if email and password are provided
     if (!email || !password) {
-      throw createError.BadRequest('Email and password are required');
+      return next(createError.BadRequest('Email and password are required'));
     }
 
-    // Retrieve user from Supabase
-    const { data, error } = await supabase
+    // Fetch user data from the 'users' table
+    const { data: user, error: fetchError } = await supabase
       .from('users')
       .select('*')
       .eq('email', email)
-      .single();
+      .single();  // Assumes only one user will be found with the given email
 
-    if (error) {
-      throw new Error(error.message);
+    if (fetchError || !user) {
+      return next(createError.Unauthorized('Invalid credentials'));
     }
 
-    if (!data) {
-      return next(createError(401, 'Invalid email or password'));
+    // Check if the password matches (plain text comparison)
+    if (user.password !== password) {
+      return next(createError.Unauthorized('Invalid credentials'));
     }
 
-    // Check if password matches (you should hash passwords in production)
-    if (data.password !== password) {
-      return next(createError(401, 'Invalid email or password'));
-    }
-
-    // Return successful login (you might want to add token-based authentication here)
-    res.status(200).json({
+    // Respond with the user data (no JWT)
+    res.status(200).send({
       message: 'Login successful',
-      user: { email: data.email, id: data.id },
+      user: {
+        id: user.id,
+        email: user.email,
+      }
     });
-
   } catch (error) {
-    next(error);  // Pass the error to the global error handler
+    next(error); // Pass the error to the global error handler
   }
 });
 
-// Refresh Token Route (this is usually used with JWT, we can leave it empty for now)
+
+
+
 router.post('/refresh-token', async (req, res, next) => {
   res.send("Refresh token route");
 });
 
-// Logout Route (Usually would be used for token invalidation, leave it empty for now)
+
 router.delete('/logout', async (req, res, next) => {
   res.send("Logout route");
 });
+
 
 module.exports = router;
