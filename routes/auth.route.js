@@ -85,9 +85,10 @@ router.post('/register', async (req, res, next) => {
 // Login Route
 router.post('/login', async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    // validation schema JOI
+    const result = await authSchema.validateAsync(req.body)
 
-    if (!email || !password) {
+    if (!result.email || !result.password) {
       return next(createError.BadRequest('Email and password are required'));
     }
 
@@ -95,7 +96,7 @@ router.post('/login', async (req, res, next) => {
     const { data: user, error: fetchError } = await supabase
       .from('users')
       .select('*')
-      .eq('email', email)
+      .eq('email', result.email)
       .single();  // Assumes only one user will be found with the given email
 
     if (fetchError || !user) {
@@ -103,7 +104,7 @@ router.post('/login', async (req, res, next) => {
     }
 
     // Check if the password matches 
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    const isPasswordValid = await bcrypt.compare(result.password, user.password)
     if (!isPasswordValid) {
       return next(createError.Unauthorized('Invalid credentials'));
     }
@@ -121,6 +122,7 @@ router.post('/login', async (req, res, next) => {
       accesstoken
     });
   } catch (error) {
+    if(error.isJoi === true) return next(createError.BadRequest("Invalid Username/Password"))
     next(error); 
   }
 });
