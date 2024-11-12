@@ -15,7 +15,7 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "email": "kalitopic@mail.com",
+    "email": "kalitopic4@mail.com",
     "password":"12345678"
 } 
 

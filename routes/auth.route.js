@@ -2,6 +2,7 @@ const express = require('express');
 const createError = require('http-errors');
 const supabase = require('../helpers/init_supabase'); // Import supabase client
 const router = express.Router();
+const bcrypt =  require('bcrypt')
 const { authSchema  }  = require('../helpers/validation_schema')
 
 // Registration Route
@@ -35,10 +36,14 @@ router.post('/register', async (req, res, next) => {
       return next(createError.Conflict(`${result.email} is already registered`));
     }
 
-    // Insert the new user (plain text password for now)
+
+    // hash the password
+    const hashedPassword = await bcrypt.hash(result.password, 10)
+
+    // Insert the new user 
     const { data, error: insertError } = await supabase
       .from('users')
-      .insert([{email, password }]);
+      .insert([{email: result.email, password: hashedPassword }]);
 
     // Check for insert errors
     if (insertError) {
@@ -84,12 +89,13 @@ router.post('/login', async (req, res, next) => {
       return next(createError.Unauthorized('Invalid credentials'));
     }
 
-    // Check if the password matches (plain text comparison)
-    if (user.password !== password) {
+    // Check if the password matches 
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+    if (!isPasswordValid) {
       return next(createError.Unauthorized('Invalid credentials'));
     }
 
-    // Respond with the user data (no JWT)
+    // Respond with the user data 
     res.status(200).send({
       message: 'Login successful',
       user: {
@@ -98,7 +104,7 @@ router.post('/login', async (req, res, next) => {
       }
     });
   } catch (error) {
-    next(error); // Pass the error to the global error handler
+    next(error); 
   }
 });
 
