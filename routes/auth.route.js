@@ -4,7 +4,7 @@ const supabase = require('../helpers/init_supabase'); // Import supabase client
 const router = express.Router();
 const bcrypt =  require('bcrypt')
 const { authSchema  }  = require('../helpers/validation_schema')
-const { signAccessToken, signRefreshToken } = require('../helpers/jwt_helper');
+const { signAccessToken, signRefreshToken, verifyRefreshToken } = require('../helpers/jwt_helper');
 const { token } = require('morgan');
 
 // Registration Route
@@ -140,7 +140,19 @@ router.post('/login', async (req, res, next) => {
 
 
 router.post('/refresh-token', async (req, res, next) => {
-  res.send("Refresh token route");
+  try {
+    const { refreshToken } = req.body
+    if(!refreshToken) throw createError.BadRequest()
+    const userId = await verifyRefreshToken(refreshToken)
+
+    const accessToken = await signAccessToken(userId)
+    const refreshTkn = await signRefreshToken(userId)
+    res.send({ accessToken, refreshTkn})
+    
+
+  } catch (error) {
+    next(error)
+  }
 });
 
 
