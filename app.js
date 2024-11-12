@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const createError = require('http-errors')
 require('dotenv').config()
 require('./helpers/init_supabase') 
+const { verifyAccessToken } = require('./helpers/jwt_helper')
 
 
 const AuthRoute = require('./routes/auth.route')
@@ -12,7 +13,8 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-app.get('/', async(req, res, next) => {
+app.get('/', verifyAccessToken, async(req, res, next) => {
+   
     res.send("Hello from express..")
 })
 

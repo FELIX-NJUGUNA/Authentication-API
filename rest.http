@@ -1,4 +1,5 @@
 GET http://localhost:3000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOjEzLCJpYXQiOjE3MzEzOTg5MzUsImV4cCI6MTczMTM5ODk1MCwiaXNzIjoibXkgYXBpLmNvbSJ9.qZvXc2Yr1VSbNuHrgfa197YML0XZoUkHhM6Xcp6Mi-U
 
 ###Login route
 POST http://localhost:3000/auth/login
