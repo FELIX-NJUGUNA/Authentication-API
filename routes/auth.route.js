@@ -4,7 +4,7 @@ const supabase = require('../helpers/init_supabase'); // Import supabase client
 const router = express.Router();
 const bcrypt =  require('bcrypt')
 const { authSchema  }  = require('../helpers/validation_schema')
-const { signAccessToken } = require('../helpers/jwt_helper');
+const { signAccessToken, signRefreshToken } = require('../helpers/jwt_helper');
 const { token } = require('morgan');
 
 // Registration Route
@@ -61,6 +61,7 @@ router.post('/register', async (req, res, next) => {
 
     // generate access token JWT
     const accesstoken = await signAccessToken(data[0].id)
+    const refreshtoken = await signRefreshToken(data[0].id)
 
     // Successfully created user, respond with the user data
     res.status(201).send({ message: 'User created successfully', 
@@ -69,7 +70,8 @@ router.post('/register', async (req, res, next) => {
         id: data[0].id,
         email: data[0].email,
       },
-      accesstoken
+      accesstoken,
+      refreshtoken
     
     });
   } catch (error) {
@@ -115,6 +117,8 @@ router.post('/login', async (req, res, next) => {
 
 
     const accesstoken = await signAccessToken(user.id)
+    const refreshtoken = await signRefreshToken(user.id)
+    
 
     // Respond with the user data 
     res.status(200).send({
@@ -123,7 +127,8 @@ router.post('/login', async (req, res, next) => {
       //   id: user.id,
       //   email: user.email,
       // },
-      accesstoken
+      accesstoken,
+      refreshtoken
     });
   } catch (error) {
     if(error.isJoi === true) return next(createError.BadRequest("Invalid Username/Password"))

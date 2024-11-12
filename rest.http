@@ -6,7 +6,7 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email": "kalitopic6@mail.com",
+    "email": "kalitopic7@mail.com",
     "password":"12345678"
 } 
 
@@ -16,7 +16,7 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "email": "kalitopic6@mail.com",
+    "email": "kalitopic7@mail.com",
     "password":"12345678"
 } 
 

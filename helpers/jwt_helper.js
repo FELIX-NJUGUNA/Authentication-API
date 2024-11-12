@@ -10,7 +10,7 @@ const createError = require('http-errors')
             }
             const secret = process.env.ACCESS_TOKEN_SECRET
             const options = {
-                expiresIn: "15s",
+                expiresIn: '1h',
                 issuer: "my api.com",
                 
             }
@@ -42,5 +42,30 @@ const createError = require('http-errors')
             req.payload = payload
             next
         })
-    }
+    },
+
+
+    signRefreshToken: (userId) =>{
+        return new Promise((resolve, reject) => {
+            const payload = {
+                aud: userId
+            }
+            const secret = process.env.REFRESH_TOKEN_SECRET
+            const options = {
+                expiresIn: '1y',
+                issuer: "my api.com",
+                
+            }
+
+
+            JWT.sign(payload, secret, options,(err, token) =>{
+                if(err) {
+                    console.log(err.message)
+                    reject(createError.InternalServerError())
+                }
+                    
+                 resolve(token)
+            })
+        })
+    },
  }
