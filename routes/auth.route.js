@@ -92,12 +92,16 @@ router.post('/login', async (req, res, next) => {
       return next(createError.BadRequest('Email and password are required'));
     }
 
+   
     // Fetch user data from the 'users' table
     const { data: user, error: fetchError } = await supabase
       .from('users')
       .select('*')
       .eq('email', result.email)
       .single();  // Assumes only one user will be found with the given email
+
+
+    if(!user) throw createError.NotFound("User not registered")
 
     if (fetchError || !user) {
       return next(createError.Unauthorized('Invalid credentials'));

@@ -5,7 +5,7 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email": "kalitopic5@mail.com",
+    "email": "kalitopic6@mail.com",
     "password":"12345678"
 } 
 
