@@ -15,8 +15,8 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "email": "fellliz123@mail.bloom",
-    "password":"1234567"
+    "email": "kalitopic@mail.com",
+    "password":"12345678"
 } 
 
 ###Refresh-token route
