@@ -10,7 +10,7 @@ const createError = require('http-errors')
             }
             const secret = process.env.ACCESS_TOKEN_SECRET
             const options = {
-                expiresIn: "1h",
+                expiresIn: "15s",
                 issuer: "my api.com",
                 
             }
@@ -34,7 +34,10 @@ const createError = require('http-errors')
         const token = bearerToken[1]
         JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
             if(err) {
-                return next(createError.Unauthorized())
+                // return err message back to the client incase of any error in the access token
+                const message = err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message
+                return next(createError.Unauthorized(message))
+                
             }
             req.payload = payload
             next
