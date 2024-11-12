@@ -4,6 +4,8 @@ const supabase = require('../helpers/init_supabase'); // Import supabase client
 const router = express.Router();
 const bcrypt =  require('bcrypt')
 const { authSchema  }  = require('../helpers/validation_schema')
+const { signAccessToken } = require('../helpers/jwt_helper');
+const { token } = require('morgan');
 
 // Registration Route
 router.post('/register', async (req, res, next) => {
@@ -57,8 +59,19 @@ router.post('/register', async (req, res, next) => {
       return next(createError.InternalServerError('Failed to create user.'));
     }
 
+    // generate access token JWT
+    const accesstoken = await signAccessToken(data[0].id)
+
     // Successfully created user, respond with the user data
-    res.status(201).send({ message: 'User created successfully', user: data[0] });
+    res.status(201).send({ message: 'User created successfully', 
+      
+      user: {
+        id: data[0].id,
+        email: data[0].email,
+      },
+      accesstoken
+    
+    });
   } catch (error) {
     // JOI Error
     if(error.isJoi == true) error.status = 420
@@ -95,13 +108,17 @@ router.post('/login', async (req, res, next) => {
       return next(createError.Unauthorized('Invalid credentials'));
     }
 
+
+    const accesstoken = await signAccessToken(user.id)
+
     // Respond with the user data 
     res.status(200).send({
       message: 'Login successful',
-      user: {
-        id: user.id,
-        email: user.email,
-      }
+      // user: {
+      //   id: user.id,
+      //   email: user.email,
+      // },
+      accesstoken
     });
   } catch (error) {
     next(error); 
