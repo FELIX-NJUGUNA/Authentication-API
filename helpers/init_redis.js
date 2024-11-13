@@ -1,8 +1,11 @@
 const redis = require('redis')
 
 const client = redis.createClient({
-    port: 6379,
-    host: '127.0.0.1'
+ socket:{
+        
+        host: 'localhost',
+        port: 6379,
+    }
 })
 
 
@@ -28,4 +31,15 @@ process.on('SIGINT', () =>{
     client.quit()
 })
 
-module.exports = client
+async function testConnection() {
+    try {
+        await client.connect();
+        console.log('Connected to Redis');
+    } catch (error) {
+        console.error('Failed to connect to Redis:', error);
+    }
+}
+
+testConnection();
+
+module.exports = client;

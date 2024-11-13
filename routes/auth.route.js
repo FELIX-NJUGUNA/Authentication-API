@@ -5,7 +5,9 @@ const router = express.Router();
 const bcrypt =  require('bcrypt')
 const { authSchema  }  = require('../helpers/validation_schema')
 const { signAccessToken, signRefreshToken, verifyRefreshToken } = require('../helpers/jwt_helper');
-const { token } = require('morgan');
+//const { token } = require('morgan');
+const client = require('../helpers/init_redis')
+
 
 // Registration Route
 router.post('/register', async (req, res, next) => {
@@ -157,7 +159,23 @@ router.post('/refresh-token', async (req, res, next) => {
 
 
 router.delete('/logout', async (req, res, next) => {
-  res.send("Logout route");
+  try {
+    const { refreshToken }  = req.body
+    if(!refreshToken) throw createError.BadRequest()
+    const userId = await verifyRefreshToken(refreshToken)
+    client.DEL(userId, (err, val) => {
+
+     if(err) {
+        console.log(err.message)
+        throw createError.InternalServerError()
+      }
+      console.log(val)
+      res.sendStatus(204)
+
+    })
+  } catch (error) {
+    
+  }
 });
 
 
