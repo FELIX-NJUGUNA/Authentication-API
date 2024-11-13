@@ -1,5 +1,5 @@
 GET http://localhost:3000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOjE0LCJpYXQiOjE3MzE0ODIzNjcsImV4cCI6MTczMTQ4NTk2NywiaXNzIjoibXkgYXBpLmNvbSJ9.9x_tmKvDoVWdqk2vmeFRvuAqpWa_cu-iZt4b_zQjeTc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOjE0LCJpYXQiOjE3MzE0OTE5MTIsImV4cCI6MTczMTQ5MTk0MiwiaXNzIjoibXkgYXBpLmNvbSJ9.BdqWQ80hssVfiEkeCXpW9WLdd1gtZBtGBF7ClSlffzg
 
 ###Login route
 POST http://localhost:3000/auth/login
