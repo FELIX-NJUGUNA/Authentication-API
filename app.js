@@ -4,9 +4,12 @@ const createError = require('http-errors')
 require('dotenv').config()
 require('./helpers/init_supabase') 
 const { verifyAccessToken } = require('./helpers/jwt_helper')
+require('./helpers/init_redis')
+
 
 
 const AuthRoute = require('./routes/auth.route')
+
 
 const app = express()
 app.use(morgan('dev'))

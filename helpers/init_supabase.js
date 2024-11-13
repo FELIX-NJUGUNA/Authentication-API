@@ -17,7 +17,7 @@ async function checkConnection() {
             throw new Error(error.message); // More descriptive error handling
         }
 
-        console.log('Successfully connected to Supabase:', data);
+        console.log('Successfully connected to Supabase:)');
     } catch (err) {
         console.error('Error connecting to Supabase:', err.message);
     }
