@@ -106,7 +106,7 @@ REDIS_PASSWORD=your-redis-password (optional)
 **Installation**
 1. Clone the repository
 ```
-git clone https://github.com/your-username/auth-api.git
+git clone https://github.com/FELIX-NJUGUNA/Authentication-API.git
 cd auth-api
 ```
 2. Install dependecies
