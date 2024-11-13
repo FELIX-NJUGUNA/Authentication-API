@@ -85,12 +85,12 @@ This endpoint is used to log out a user by invalidating the refresh token.
 
 **Supabase Integration**
 
-I have used Supabase for user management.
-```
-    Create a Supabase Account: Go to Supabase and sign up for an account.
-    Create a New Project: Once logged in, create a new project in Supabase and follow the setup instructions.
-    Obtain API Keys: Go to the API section of your Supabase project to get the URL and anon/public key.
-```
+I have used Supabase for user management and you can set up Supabase with the following steps:
+
+1. Go to Supabase and sign up for an account.
+2. Once logged in, create a new project in Supabase and follow the setup instructions.
+3. Go to the API section of your Supabase project to get the URL and anon/public key.
+
 **Environmental Variables for Supabase and Redis**
 .env File
 ```
