@@ -38,8 +38,8 @@ This endpoint is used for **user login**. Upon successful login, it returns an *
 {
     "email": "user@example.com",
     "password": "password123"
-}
-
+} 
+```
 ### 2. **Register**
 
 #### `POST /auth/register`
@@ -53,7 +53,7 @@ This endpoint is used for **user resgitration**. Upon successful registration, i
     "email": "newuser@example.com",
     "password": "password123"
 }
-
+```
 
 ### 3. **Refresh-token**
 
@@ -67,6 +67,7 @@ This endpoint is used to refresh an expired access token using a valid **refresh
 {
     "refreshToken": "your-refresh-token-here"
 }
+```
 
 
 ### 4. **Logout**
@@ -76,15 +77,23 @@ This endpoint is used to refresh an expired access token using a valid **refresh
 This endpoint is used to log out a user by invalidating the refresh token.
 
 **Request Body:**
-
+```
 {
     "refreshToken": "your-refresh-token-here"
 }
+```
 
+**Supabase Integration**
 
-
-**.env File**
-
+I have used Supabase for user management.
+```
+    Create a Supabase Account: Go to Supabase and sign up for an account.
+    Create a New Project: Once logged in, create a new project in Supabase and follow the setup instructions.
+    Obtain API Keys: Go to the API section of your Supabase project to get the URL and anon/public key.
+```
+**Environmental Variables for Supabase and Redis**
+.env File
+```
 SUPABASE_URL=https://your-supabase-url.supabase.co
 SUPABASE_ANON_KEY=your-anon-key-here
 ACCESS_TOKEN_SECRET=your-access-token-secret
@@ -92,6 +101,36 @@ REFRESH_TOKEN_SECRET=your-refresh-token-secret
 REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_PASSWORD=your-redis-password (optional)
+```
+
+**Installation**
+1. Clone the repository
+```
+git clone https://github.com/your-username/auth-api.git
+cd auth-api
+```
+2. Install dependecies
+```
+npm install
+```
+3. Set up environmental variables
+```
+Navigate to .env file or create yours in the root directory and edit the following:
+SUPABASE_URL=https://your-supabase-url.supabase.co
+SUPABASE_ANON_KEY=your-anon-key-here
+ACCESS_TOKEN_SECRET=your-access-token-secret
+REFRESH_TOKEN_SECRET=your-refresh-token-secret
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=your-redis-password (optional)
+```
+4. Start the server
+```
+npm start
+
+NB : The default it will run on http://localhost:3000
+```
+
 
 
 
