@@ -1,6 +1,6 @@
 # Authentication API with JWT, Redis, and Supabase
 
-This is a **Node.js** API that handles **user authentication** using **JWT (JSON Web Tokens)** for access and refresh tokens. It integrates with **Redis** for storing refresh tokens and **Supabase** for user management and authentication.
+This is a **Node.js** API that handles **user authentication** using **JWT (JSON Web Tokens)** for access and refresh tokens. It integrates with **Redis** for storing refresh tokens and **Supabase** for user management.
 
 The API includes routes for **user registration**, **login**, **token refreshing**, and **logout**.
 
@@ -9,7 +9,7 @@ This API can be easily integrated into front-end applications like **Flutter**, 
 ## Features
 
 - **JWT Authentication**: Secure login with access tokens and refresh tokens.
-- **Supabase Integration**: User authentication and management using Supabase's built-in authentication system.
+- **Supabase Integration**: User management using.
 - **Redis**: Storing refresh tokens in Redis for quick access and validation.
 - **Token Expiry**: Access tokens expire after 1 hour, and refresh tokens expire after 1 year.
 - **Error Handling**: Graceful error handling for unauthorized access and internal errors.
