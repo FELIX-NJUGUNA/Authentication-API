@@ -11,7 +11,7 @@ module.exports = {
             const secret = process.env.ACCESS_TOKEN_SECRET
             const options = {
                 // you can add your expiry also here (eg. year = 1y)
-                expiresIn: '30S',
+                expiresIn: '1h',
                 issuer: "my api.com",
             }
 
@@ -21,7 +21,7 @@ module.exports = {
                     reject(createError.InternalServerError())
                 }
                     // you can add your EX(expiry time eg a year = 365 * 24 * 60 * 60)
-                client.SET(String(userId), token, 'EX', 30, (err, reply) => {
+                client.SET(String(userId), token, 'EX', 365 * 24 * 60 * 60, (err, reply) => {
                     if (err) {
                         console.log('Redis SET Error:', err.message)
                         reject(createError.InternalServerError())
